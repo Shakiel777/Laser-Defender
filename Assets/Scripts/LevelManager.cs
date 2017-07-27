@@ -1,16 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour {
 
-	public void LoadLevel(string name){
-		Debug.Log ("New Level load: " + name);
-		Application.LoadLevel (name);
+    public void LoadLevel(string name)
+    {
+		Debug.Log ("Level load requested for: "+name);
+        SceneManager.LoadScene(name);
+	}
+	public void QuitLevel()
+    {
+		Debug.Log ("Quit game request received");
 	}
 
-	public void QuitRequest(){
-		Debug.Log ("Quit requested");
-		Application.Quit ();
-	}
+    public void LoadNextLevel()
+    {
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        print("Load next level request");
 
+    }
 }
