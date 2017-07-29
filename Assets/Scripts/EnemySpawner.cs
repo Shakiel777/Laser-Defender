@@ -25,18 +25,9 @@ public class EnemySpawner : MonoBehaviour {
             GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
             enemy.transform.parent = child;
         }
-            //float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
-            //Vector3 leftBoundry = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distanceToCamera));
-            //Vector3 rightBoundry = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distanceToCamera));
-            //xmax = rightBoundry.x;
-            //xmin = leftBoundry.x;
 
-            //foreach (Transform child in transform)
-            //{
-            //    GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-            //    enemy.transform.parent = child;
-            //}
-        }
+    }
+
     public void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0f));
@@ -46,38 +37,17 @@ public class EnemySpawner : MonoBehaviour {
     void Update ()
     {
         float formationRightEdge = transform.position.x + 0.5f * width;
-
         float formationLeftEdge = transform.position.x - 0.5f * width;
 
         if (formationRightEdge > boundaryRightEdge)
         {
-
             direction = -1;
-
         }
-
         if (formationLeftEdge < boundaryLeftEdge)
         {
-
             direction = 1;
-
         }
-
         transform.position += new Vector3(direction * speed * Time.deltaTime, 0, 0);
-        //if (movingRight)
-        //   {
-        //       transform.position += Vector3.right * speed * Time.deltaTime;
-        //   }
-        //   else
-        //   {
-        //       transform.position += Vector3.left * speed * Time.deltaTime;
-        //   }
-
-        //   float rightEdgeofFormation = transform.position.x + (0.5f * width);
-        //   float leftEdgeofFormation = transform.position.x - (0.5f * width);
-        //   if(leftEdgeofFormation < xmin || rightEdgeofFormation > xmax)
-        //   {
-        //       movingRight = !movingRight;
-        //   }
     }
+
 }

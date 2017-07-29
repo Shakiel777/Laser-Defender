@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour {
     public GameObject projectile;
     public float projectileSpeed = 5f;
     public float firingRate = 0.2f;
+    public float health = 250f;
     float minX;
     float maxX;
 
@@ -22,8 +23,9 @@ public class PlayerController : MonoBehaviour {
     }
     void Fire()
     {
-            GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
-            beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
+        Vector3 offset = new Vector3(0, 1, 0);
+        GameObject beam = Instantiate(projectile, transform.position + offset, Quaternion.identity) as GameObject;
+        beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
 
     }
 	// Update is called once per frame
@@ -39,23 +41,28 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             Debug.Log("Left Arrow Pressed");
-            // transform.position += new Vector3(-speed * Time.deltaTime, 0, 0);
             transform.position += Vector3.left * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             Debug.Log("Right Arrow Pressed");
-            // transform.position += new Vector3(speed * Time.deltaTime, 0, 0);
             transform.position += Vector3.right * speed * Time.deltaTime;
         }
         // restrict the player to the game space.
         float newX = Mathf.Clamp(transform.position.x, minX, maxX);
         transform.position = new Vector3(newX, transform.position.y, transform.position.z);
     }
+    void OnTriggerEnter2D(Collider2D collider)
+    {
 
+        Projectile missile = collider.gameObject.GetComponent<Projectile>();
+        if (missile)
+        {
+            health -= missile.getDamage();
+            missile.Hit();
+            if (health <= 0) { Destroy(gameObject); }
 
-    //Vector3 paddlePos = new Vector3(0.5f, this.transform.position.y, 0f);
-    //float mousePosInBlocks = Input.mousePosition.x / Screen.width * 16;
-    //paddlePos.x = Mathf.Clamp(mousePosInBlocks, minX, maxX);
-    //this.transform.position = paddlePos;
+            print("Player Hit! (trigger)");
+        }
+    }
 }
