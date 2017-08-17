@@ -9,30 +9,37 @@ public class PlayerController : MonoBehaviour {
     public float projectileSpeed = 5f;
     public float firingRate = 0.2f;
     public float health = 250f;
-    float minX;
-    float maxX;
+    public int livesValue = 1;
+    public AudioClip fireSound;
+    public AudioClip death;
+    private Lives lives;
+    float minX = 5;
+    float maxX = -5;
+
+    
 
     // Use this for initialization
     void Start ()
     {
         float distance = transform.position.z - Camera.main.transform.position.z;
         Vector3 leftmost = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, distance));
-        Vector3 rightmost = Camera.main.ViewportToWorldPoint(new Vector3(0.95f, 0f, distance));
+        Vector3 rightmost = Camera.main.ViewportToWorldPoint(new Vector3(1f, 1f, distance));
         minX = leftmost.x + padding;
         maxX = rightmost.x - padding;
+        lives = GameObject.Find("myShip").GetComponent<Lives>();
     }
     void Fire()
     {
-        Vector3 offset = new Vector3(0, 1, 0);
-        GameObject beam = Instantiate(projectile, transform.position + offset, Quaternion.identity) as GameObject;
+        // Vector3 offset = new Vector3(0, 1, 0);
+        GameObject beam = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
         beam.GetComponent<Rigidbody2D>().velocity = new Vector3(0, projectileSpeed, 0);
-
+        AudioSource.PlayClipAtPoint(fireSound, transform.position);
     }
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            InvokeRepeating("Fire", 0.000001f, firingRate);
+            InvokeRepeating("Fire", 0.0001f, firingRate);
         }
         if (Input.GetKeyUp(KeyCode.Space))
         {
@@ -40,12 +47,10 @@ public class PlayerController : MonoBehaviour {
         }
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            Debug.Log("Left Arrow Pressed");
             transform.position += Vector3.left * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            Debug.Log("Right Arrow Pressed");
             transform.position += Vector3.right * speed * Time.deltaTime;
         }
         // restrict the player to the game space.
@@ -60,9 +65,23 @@ public class PlayerController : MonoBehaviour {
         {
             health -= missile.getDamage();
             missile.Hit();
-            if (health <= 0) { Destroy(gameObject); }
-
-            print("Player Hit! (trigger)");
+            if (health <= 0) { Die(); }
         }
+    }
+    void Die()
+    {
+        // Destroy(gameObject);
+        
+        AudioSource.PlayClipAtPoint(death, transform.position);
+        lives.Ships(livesValue);
+        StartCoroutine(Dead());
+    }
+    IEnumerator Dead()
+    {
+        Debug.Log("dead");
+        GetComponent<Renderer>().enabled = false;
+        yield return new WaitForSeconds(5);
+        Debug.Log("respawn");
+        GetComponent<Renderer>().enabled = true;
     }
 }

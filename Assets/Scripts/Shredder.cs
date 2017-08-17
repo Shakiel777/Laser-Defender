@@ -6,6 +6,5 @@ public class Shredder : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         DestroyObject(collision.gameObject);
-        print("Projectile Destroyed");
     }
 }
