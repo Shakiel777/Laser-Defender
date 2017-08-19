@@ -70,11 +70,12 @@ public class PlayerController : MonoBehaviour {
     }
     void Die()
     {
-        // Destroy(gameObject);
-        
+        Destroy(gameObject);
         AudioSource.PlayClipAtPoint(death, transform.position);
-        lives.Ships(livesValue);
-        StartCoroutine(Dead());
+        LevelManager man = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        man.LoadLevel("Win");
+        // lives.Ships(livesValue);
+        // StartCoroutine(Dead());
     }
     IEnumerator Dead()
     {

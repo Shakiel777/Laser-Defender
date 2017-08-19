@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ScoreKeeper : MonoBehaviour {
 
-    public int score = 0;
+    public static int score = 0;
     private Text myScore;
 
     void Start()
@@ -21,9 +21,9 @@ public class ScoreKeeper : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	public void Reset ()
+	public static void Reset ()
     {
         score = 0;
-        myScore.text = score.ToString();
+        // myScore.text = score.ToString(); (not needed because now calling static)
     }
 }
